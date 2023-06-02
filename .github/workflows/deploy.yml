@@ -5,6 +5,10 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+    
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -27,11 +31,11 @@ jobs:
       uses: sand4rt/ftp-deployer@v1.7
       with:
         sftp: false # optional
-        host: ${{ env.REMOTE_HOST }} # e.g. ftp.host.com or sftp.host.com (without ftp:// or ftps://)
+        host: ${{ vars.REMOTE_HOST }} # e.g. ftp.host.com or sftp.host.com (without ftp:// or ftps://)
         port: 21 # optional, default is: 21
-        username: ${{ env.REMOTE_NAME }} # FTP username
+        username: ${{ vars.REMOTE_NAME }} # FTP username
         password: ${{ secrets.REMOTE_PASSWORD }} # FTP password
-        remote_folder: ${{ env.REMOTE_FOLDER }} # optional, remote path of your FTP server
+        remote_folder: ${{ vars.REMOTE_FOLDER }} # optional, remote path of your FTP server
         local_folder: 'build' # optional, local path, default is: dist
         cleanup: false # optional, remove existing files inside FTP remote folder
         passive: true # optional
